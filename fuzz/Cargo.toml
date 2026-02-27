@@ -1,0 +1,90 @@
+[package]
+name = "alpen-fuzz"
+version = "0.1.0"
+edition = "2024"
+publish = false
+license = "MIT OR Apache-2.0"
+
+[package.metadata]
+cargo-fuzz = true
+
+[workspace]
+
+[dependencies]
+# Fuzzing framework
+libfuzzer-sys = "0.4"
+arbitrary = { version = "1.3", features = ["derive"] }
+
+# Target crates
+strata-asm-txs-bridge-v1 = { path = "../crates/asm/txs/bridge-v1" }
+strata-asm-txs-admin = { path = "../crates/asm/txs/admin" }
+strata-asm-proto-checkpoint = { path = "../crates/asm/subprotocols/checkpoint" }
+strata-asm-common = { path = "../crates/asm/common" }
+strata-ol-chain-types-new = { path = "../crates/ol/chain-types" }
+strata-crypto = { path = "../crates/crypto" }
+strata-checkpoint-types-ssz = { path = "../crates/checkpoint-types-ssz" }
+strata-identifiers = { path = "../crates/identifiers" }
+
+# Serialization crates
+strata-codec = { git = "https://github.com/alpenlabs/strata-common", features = ["derive"], tag = "v0.1.0-alpha-rc7" }
+strata-l1-envelope-fmt = { git = "https://github.com/alpenlabs/strata-common", tag = "v0.1.0-alpha-rc7" }
+ssz = { git = "https://github.com/alpenlabs/ssz-gen", tag = "v0.12.4" }
+borsh = { version = "1.5.0", features = ["derive"] }
+
+# Bitcoin types for constructing test inputs
+bitcoin = { version = "0.32.6", features = ["serde"] }
+
+# secp256k1 for key parsing in threshold signature fuzzing
+secp256k1 = { version = "0.29.1", features = ["global-context", "std"] }
+
+[[bin]]
+name = "fuzz_deposit_tx_parsing"
+path = "fuzz_targets/fuzz_deposit_tx_parsing.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_admin_tx_parsing"
+path = "fuzz_targets/fuzz_admin_tx_parsing.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_ol_block_ssz"
+path = "fuzz_targets/fuzz_ol_block_ssz.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_ol_transaction_ssz"
+path = "fuzz_targets/fuzz_ol_transaction_ssz.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_threshold_signatures"
+path = "fuzz_targets/fuzz_threshold_signatures.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_checkpoint_payload_ssz"
+path = "fuzz_targets/fuzz_checkpoint_payload_ssz.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "fuzz_strata_codec"
+path = "fuzz_targets/fuzz_strata_codec.rs"
+test = false
+doc = false
+bench = false
+
+[profile.release]
+debug = 1
